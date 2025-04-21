@@ -28,7 +28,7 @@
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
   <!-- ▼ フォーム表示エリア -->
-  <div id="sfaFormArea" class="sfa-form-area-1"></div>
+  <div id="sfaFormArea" class="sfa-form-area"></div>
 
   <!-- ▼ 完了メッセージ -->
   <div id="thanksMessage">ご登録ありがとうございました。</div>
@@ -46,7 +46,6 @@
       }
     });
 
-    // SFAの送信完了時の処理（とどまる用）
     document.addEventListener("DOMContentLoaded", function () {
       const observer = new MutationObserver(function () {
         const completeMessage = document.querySelector(".sfa-complete-message");
