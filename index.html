@@ -17,15 +17,20 @@
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <!-- フォームエリア -->
+  <!-- フォーム表示用エリア -->
   <div id="sfaFormArea" sfa-form-area="1"></div>
 
-  <!-- SFAスクリプト -->
-  <script src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
+  <!-- スクリプト（defer付き） -->
+  <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
   <script>
-    window.onload = function () {
-      openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-    };
+    window.addEventListener('load', function () {
+      // ページが完全に読み込まれてから openForm を実行
+      if (typeof openForm === 'function') {
+        openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+      } else {
+        console.error("openFormが読み込まれていません。");
+      }
+    });
   </script>
 </body>
 </html>
