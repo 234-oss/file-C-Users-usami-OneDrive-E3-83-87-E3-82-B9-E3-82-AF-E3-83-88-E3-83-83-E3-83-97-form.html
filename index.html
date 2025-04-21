@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <title>資料請求フォーム | ASNALO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 40px;
-      background-color: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
-    }
-    #sfaForm_1 {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>資料請求フォーム｜ASNALO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- スタイルシート -->
+    <link rel="stylesheet" type="text/css" href="https://form.next-cloud.jp/css/validationEngine.jquery.css">
+    <link rel="stylesheet" type="text/css" href="https://form.next-cloud.jp/css/form_preview.css?1717032138">
+    <!-- スクリプト -->
+    <script type="text/javascript" src="https://form.next-cloud.jp/js/jquery.validationEngine.js"></script>
+    <script type="text/javascript" src="https://form.next-cloud.jp/js/jquery.validationEngine-ja.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 40px;
+        background-color: #f9f9f9;
+        color: #333;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>資料請求フォーム</h1>
+    <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-<h1>資料請求フォーム</h1>
-<p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
+    <!-- SFAフォームの埋め込み先 -->
+    <div id="sfaFormArea" class="sfa-form-area"></div>
 
-<!-- 🔽 ここが抜けてた -->
-<form id="sfaForm_1"></form>
-
-<script src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
-<script>
-  window.onload = function() {
-    openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-  };
-</script>
-
-</body>
+    <!-- SFAフォームスクリプト -->
+    <script src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
+    <script>
+      window.onload = function () {
+        openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+      };
+    </script>
+  </body>
 </html>
