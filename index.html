@@ -36,5 +36,12 @@
     });
   </script>
 
+  <!-- ▼ フォーム送信完了後に thanks.html へ遷移 -->
+  <script>
+    document.addEventListener('sfaFormSendSuccess', function () {
+      window.location.href = 'thanks.html';
+    });
+  </script>
+
 </body>
 </html>
