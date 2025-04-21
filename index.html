@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>資料請求フォーム｜ASNALO</title>
+  <meta charset="UTF-8">
+  <title>資料請求フォーム</title>
   <style>
     body {
       font-family: sans-serif;
@@ -18,8 +17,15 @@
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <!-- ▼ここがSFAタグエリア -->
+  <!-- フォームエリア -->
   <div id="sfaFormArea" sfa-form-area="1"></div>
+
+  <!-- SFAスクリプト -->
   <script src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
+  <script>
+    window.onload = function () {
+      openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+    };
+  </script>
 </body>
 </html>
