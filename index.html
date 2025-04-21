@@ -13,22 +13,27 @@
     }
   </style>
 </head>
+
 <body>
 
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <div id="sfaForm_1"></div>
+  <!-- ▼ 必須のフォーム表示エリア（SFA用） -->
+  <form id="sfaForm_1"></form>
 
-  <script src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
+  <!-- ▼ SFA提供のスクリプト -->
+  <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
+
+  <!-- ▼ フォーム実行用スクリプト（SFAタグ設置） -->
   <script>
-    window.onload = function() {
-      if (typeof openForm === "function") {
+    window.addEventListener('load', function () {
+      if (typeof openForm === 'function') {
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
       } else {
         console.error("openForm 関数が読み込まれていません！");
       }
-    };
+    });
   </script>
 
 </body>
