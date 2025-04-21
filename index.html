@@ -28,30 +28,25 @@
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
   <!-- ▼ フォーム表示エリア -->
-  <div id="sfaFormArea" class="sfa-form-area="1"></div>
+  <div id="sfaFormArea" class="sfa-form-area-1"></div>
 
   <!-- ▼ 完了メッセージ -->
   <div id="thanksMessage">ご登録ありがとうございました。</div>
 
-  <!-- ▼ SFAフォームスクリプト -->
+  <!-- ▼ SFAフォームスクリプト読込 -->
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
 
-  <!-- ▼ openForm 実行＋完了メッセージ表示スクリプト -->
+  <!-- ▼ フォーム起動スクリプト -->
   <script>
-    // openFormが読み込まれるまでリトライ
     window.addEventListener('load', function () {
-      const retryOpenForm = () => {
-        if (typeof openForm === 'function') {
-          openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-        } else {
-          console.log("openForm 未定義。再試行中...");
-          setTimeout(retryOpenForm, 300);
-        }
-      };
-      retryOpenForm();
+      if (typeof openForm === 'function') {
+        openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+      } else {
+        console.error("openForm 関数が読み込まれていません！");
+      }
     });
 
-    // 送信完了後のDOM変化を監視し、完了メッセージを表示
+    // SFAの送信完了時の処理（とどまる用）
     document.addEventListener("DOMContentLoaded", function () {
       const observer = new MutationObserver(function () {
         const completeMessage = document.querySelector(".sfa-complete-message");
