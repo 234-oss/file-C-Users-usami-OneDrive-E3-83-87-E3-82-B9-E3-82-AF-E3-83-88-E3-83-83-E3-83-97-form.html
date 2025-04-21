@@ -14,24 +14,22 @@
   </style>
 </head>
 <body>
+
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <!-- フォームエリア -->
-  <div id="sfaFormArea" sfa-form-area="1"></div>
+  <div id="sfaForm_1"></div>
 
-  <!-- スクリプト読込（defer付きで読み込み順を確保） -->
-  <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
-
-  <!-- openForm実行コード -->
+  <script src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
   <script>
-    window.addEventListener('load', function () {
-      if (typeof openForm === 'function') {
+    window.onload = function() {
+      if (typeof openForm === "function") {
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
       } else {
         console.error("openForm 関数が読み込まれていません！");
       }
-    });
+    };
   </script>
+
 </body>
 </html>
