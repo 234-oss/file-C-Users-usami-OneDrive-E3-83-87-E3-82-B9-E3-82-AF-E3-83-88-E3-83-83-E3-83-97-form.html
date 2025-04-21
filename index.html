@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>資料請求フォーム</title>
+  <title>資料請求フォーム (Gemini版)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -11,14 +11,27 @@
       color: #333;
       line-height: 1.6;
     }
+    #sfaFormArea {
+      /* フォームエリアのスタイル（必要に応じて調整） */
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
     #thanksMessage {
-      display: none;
+      display: none; /* 初期状態では非表示 */
       padding: 20px;
       background-color: #e0ffe0;
       border: 1px solid #b2d8b2;
       margin-top: 30px;
       font-size: 1.2em;
       text-align: center;
+      color: #333;
+    }
+    /* SFAスクリプトが生成する可能性のある要素のスタイル (任意) */
+    .sfa-complete-message {
+        /* デバッグ用に一時的に見えるようにするなども可能 */
+        /* border: 1px dashed red; */
     }
   </style>
 </head>
@@ -27,34 +40,82 @@
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <!-- ▼ フォーム表示エリア -->
-  <div id="sfaFormArea" class="sfa-form-area"></div>
+  <div id="sfaFormArea" class="sfa-form-area-1">
+    <p>フォームを読み込んでいます...</p>
+  </div>
 
-  <!-- ▼ 完了メッセージ -->
-  <div id="thanksMessage">ご登録ありがとうございました。</div>
+  <div id="thanksMessage">
+    ご登録ありがとうございました。担当者より追ってご連絡いたします。
+  </div>
 
-  <!-- ▼ SFAフォームスクリプト読込 -->
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
 
-  <!-- ▼ フォーム起動スクリプト -->
   <script>
+    // SFAスクリプトの関数が利用可能になったらフォームを起動
     window.addEventListener('load', function () {
+      console.log('window loaded. Trying to execute openForm.');
       if (typeof openForm === 'function') {
-        openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+        try {
+          openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+          console.log('openForm executed successfully.');
+        } catch (error) {
+          console.error('openForm 関数の実行中にエラーが発生しました:', error);
+          document.getElementById('sfaFormArea').innerHTML = '<p style="color: red;">フォームの表示中にエラーが発生しました。時間をおいて再読み込みしてください。</p>';
+        }
       } else {
-        console.error("openForm 関数が読み込まれていません！");
+        console.error("openForm 関数が見つかりません。SFAスクリプトが正しく読み込まれていない可能性があります。");
+        document.getElementById('sfaFormArea').innerHTML = '<p style="color: red;">フォームの読み込みに失敗しました。時間をおいて再読み込みしてください。</p>';
       }
     });
 
+    // DOMの準備ができたら、完了メッセージの監視を開始
     document.addEventListener("DOMContentLoaded", function () {
-      const observer = new MutationObserver(function () {
+      console.log('DOMContentLoaded event fired. Setting up MutationObserver.');
+      const sfaFormArea = document.getElementById("sfaFormArea");
+      const thanksMessage = document.getElementById("thanksMessage");
+
+      // DOMの変化を監視するMutationObserverを設定
+      const observer = new MutationObserver(function(mutationsList, observerInstance) {
+        console.log('MutationObserver callback triggered.'); // 監視が反応したことをログ出力
+
+        // SFA完了メッセージ要素を探す
         const completeMessage = document.querySelector(".sfa-complete-message");
-        if (completeMessage && completeMessage.offsetParent !== null) {
-          document.getElementById("sfaFormArea").style.display = "none";
-          document.getElementById("thanksMessage").style.display = "block";
+
+        // デバッグ用に常に見つかった要素をログに出す
+        if(completeMessage) {
+            console.log('Found .sfa-complete-message element:', completeMessage);
+            console.log('completeMessage.offsetParent:', completeMessage.offsetParent); // 表示状態のチェック
+        }
+
+        // 条件: フォームエリアが表示中 かつ 完了メッセージ要素が存在し、それが実際に表示されている場合
+        if (sfaFormArea.style.display !== 'none' && completeMessage && completeMessage.offsetParent !== null) {
+          console.log('完了条件に一致しました！フォームを非表示にし、完了メッセージを表示します。');
+
+          // フォームエリアを非表示にする
+          sfaFormArea.style.display = 'none';
+
+          // 完了メッセージを表示する
+          thanksMessage.style.display = 'block';
+
+          // 監視を停止する (重要: 無限ループや意図しない再実行を防ぐ)
+          observerInstance.disconnect();
+          console.log('MutationObserver disconnected.');
+        } else {
+          // 条件に一致しなかった場合（デバッグ用）
+          // console.log('完了条件には一致しませんでした。');
         }
       });
-      observer.observe(document.body, { childList: true, subtree: true });
+
+      // 監視を開始 (body以下の要素の追加・削除を監視)
+      // 注意: SFAスクリプトが具体的にどこに .sfa-complete-message を挿入するかわからないため、
+      //       ひとまず body 全体を監視対象としていますが、もし挿入場所が特定できれば、
+      //       より限定的な要素 (例: sfaFormArea.parentElement) を監視対象にする方が効率的です。
+      observer.observe(document.body, {
+        childList: true, // 子要素（直接の子だけでなく、孫要素なども含む）の追加・削除を監視
+        subtree: true   // 監視対象のノード配下の全ての子孫ノードも監視対象に含める
+      });
+
+      console.log('MutationObserver started observing document.body.');
     });
   </script>
 
