@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>資料請求フォーム (ID・会社ID修正版)</title> <style>
+  <title>資料請求フォーム (公式コード反映版)</title> <style>
     body {
       font-family: sans-serif;
       padding: 40px;
@@ -10,7 +10,7 @@
       color: #333;
       line-height: 1.6;
     }
-    #sfaForm_1 { /* ID変更に合わせてセレクタ修正 */
+    #sfaForm_1 { /* ターゲットID */
       padding: 20px;
       border: 1px solid #ccc;
       background-color: #fff;
@@ -35,8 +35,7 @@
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <div id="sfaForm_1" class="sfa-form-area-1">
-    <p>フォームを読み込んでいます...</p>
+  <div id="sfaForm_1" class="sfa-form-area-1"> <p>フォームを読み込んでいます...</p>
   </div>
 
   <div id="thanksMessage">
@@ -46,10 +45,10 @@
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
 
   <script>
-    const targetElementId = "sfaForm_1"; // フォーム表示要素のID
+    const targetElementId = "sfaForm_1"; // 念のため変数として定義
 
     window.addEventListener('load', function () {
-      console.log('window loaded. Trying to execute openForm.');
+      console.log('window loaded. Trying to execute openForm with official parameters.');
       const targetElement = document.getElementById(targetElementId);
 
       if (!targetElement) {
@@ -59,13 +58,11 @@
 
       if (typeof openForm === 'function') {
         try {
-          // ★★★ 会社IDを "1" に修正 ★★★
-          // SFAによっては openForm("フォームID", "会社ID", "フォームNo", "ターゲット要素ID") の形式
-          openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "1", "1", targetElementId);
-          // もし上記で動かない/エラーになる場合は、引数3つを試す
-          // openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "1", "1");
+          // ★★★ 公式タグのパラメータに修正 ★★★
+          // openForm("フォームID", "会社ID", "フォームNo");
+          openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
 
-          console.log(`openForm executed successfully for target #${targetElementId}.`);
+          console.log(`openForm executed successfully with 3 arguments.`);
         } catch (error) {
           console.error('openForm 関数の実行中にエラーが発生しました:', error);
           targetElement.innerHTML = '<p style="color: red;">フォームの表示中にエラーが発生しました。パラメータを確認するか、サポートにお問い合わせください。</p>';
@@ -77,7 +74,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-      // ... (MutationObserverの部分は前回の修正のまま) ...
+      // ... (MutationObserverの部分は変更なし) ...
       console.log('DOMContentLoaded event fired. Setting up MutationObserver.');
       const sfaFormContainer = document.getElementById(targetElementId);
       const thanksMessage = document.getElementById("thanksMessage");
@@ -98,6 +95,7 @@
         }
       });
 
+      // 監視対象は sfaForm_1 のまま
       observer.observe(sfaFormContainer, { childList: true, subtree: true });
       console.log(`MutationObserver started observing #${targetElementId}.`);
       // もし上記で完了検知できない場合は body 監視に戻す
@@ -109,4 +107,5 @@
   </script>
 
 </body>
+</html>
 </html>
