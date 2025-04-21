@@ -33,20 +33,25 @@
   <!-- ▼ 完了メッセージ -->
   <div id="thanksMessage">ご登録ありがとうございました。</div>
 
-  <!-- ▼ SFAフォームスクリプト読込 -->
+  <!-- ▼ SFAフォームスクリプト -->
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
 
-  <!-- ▼ フォーム起動スクリプト -->
+  <!-- ▼ openForm 実行＋完了メッセージ表示スクリプト -->
   <script>
+    // openFormが読み込まれるまでリトライ
     window.addEventListener('load', function () {
-      if (typeof openForm === 'function') {
-        openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-      } else {
-        console.error("openForm 関数が読み込まれていません！");
-      }
+      const retryOpenForm = () => {
+        if (typeof openForm === 'function') {
+          openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+        } else {
+          console.log("openForm 未定義。再試行中...");
+          setTimeout(retryOpenForm, 300);
+        }
+      };
+      retryOpenForm();
     });
 
-    // SFAの送信完了時の処理（フォーム内でとどまるために完了メッセージを表示）
+    // 送信完了後のDOM変化を監視し、完了メッセージを表示
     document.addEventListener("DOMContentLoaded", function () {
       const observer = new MutationObserver(function () {
         const completeMessage = document.querySelector(".sfa-complete-message");
