@@ -2,104 +2,63 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>資料請求フォーム (過去動作版ベース)</title> <!-- タイトル変更 -->
+  <title>資料請求フォーム</title>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 40px;
-      background-color: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
-    }
-    /* ★ id="sfaFormArea" に合わせる */
-    #sfaFormArea {
+    /* 必要であれば #sfaForm_1 に対するスタイルを調整 */
+    #sfaForm_1 {
       padding: 20px;
       border: 1px solid #ccc;
       background-color: #fff;
       margin-bottom: 20px;
-      min-height: 100px;
+      min-height: 100px; /* フォームが表示されるまでの最低限の高さ */
     }
-    #thanksMessage {
+    #thanksMessage { /* これは完了メッセージ用なので残す */
       display: none;
       padding: 20px;
-      background-color: #e0ffe0;
-      border: 1px solid #b2d8b2;
-      margin-top: 30px;
-      font-size: 1.2em;
-      text-align: center;
+      /* ... 他のスタイル ... */
     }
   </style>
-</head>
+  <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
+  </head>
 <body>
-
   <h1>資料請求フォーム</h1>
   <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <!-- ▼ フォーム表示エリア -->
-  <!-- ★ id="sfaFormArea", class="sfa-form-area-1" (Typo修正) ★ -->
-  <div id="sfaFormArea" class="sfa-form-area-1">
-      <p>フォームを読み込んでいます...</p> <!-- 初期メッセージ追加 -->
-  </div>
+  <form id="sfaForm_1">
+     <p>フォームを読み込んでいます...</p>
+  </form>
 
-  <!-- ▼ 完了メッセージ -->
   <div id="thanksMessage">ご登録ありがとうございました。</div>
 
-  <!-- ▼ SFAフォームスクリプト読込 -->
-  <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
-
-  <!-- ▼ フォーム起動スクリプト -->
   <script>
-    window.addEventListener('load', function () {
-      console.log('window loaded. Trying to execute openForm (past working version base).');
-      const targetElement = document.getElementById("sfaFormArea"); // ★ ID を sfaFormArea に
-
-      if (!targetElement) {
-          console.error('フォーム表示エリア #sfaFormArea が見つかりません。');
-          return;
-      }
-
+    // deferを使っているので、DOMContentLoadedかwindow.onloadを使うのがより確実
+    window.addEventListener('load', function() {
+      // 念のため openForm が存在するか確認
       if (typeof openForm === 'function') {
         try {
-          // ★ パラメータは公式タグと同じ B0jen..., 335, 1。引数3つ。★
+          console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
           openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-          console.log('openForm executed successfully (3 arguments).');
+          console.log('openForm executed.');
         } catch (error) {
-          console.error('openForm 関数の実行中にエラーが発生しました:', error);
-          targetElement.innerHTML = '<p style="color: red;">フォームの表示中にエラーが発生しました。</p>';
-        }
-      } else {
-        console.error("openForm 関数が読み込まれていません！");
-        targetElement.innerHTML = '<p style="color: red;">フォームの読み込みに失敗しました。</p>';
-      }
-    });
-
-    // SFAの送信完了時の処理（完了メッセージ表示）
-    document.addEventListener("DOMContentLoaded", function () {
-      console.log('DOMContentLoaded event fired. Setting up MutationObserver for completion.');
-      const sfaFormContainer = document.getElementById("sfaFormArea"); // ★ ID を sfaFormArea に
-      const thanksMessage = document.getElementById("thanksMessage");
-
-      if (!sfaFormContainer) {
-          console.error('フォーム表示エリア #sfaFormArea が見つかりません。MutationObserverを設定できません。');
-          return;
-      }
-
-      const observer = new MutationObserver(function () {
-        const completeMessage = document.querySelector(".sfa-complete-message");
-        if (completeMessage && completeMessage.offsetParent !== null) {
-          // ★ 完了時に非表示にする要素も sfaFormArea ★
-          if (sfaFormContainer.style.display !== 'none') { // 既に非表示なら何もしない
-              console.log('完了条件に一致しました！フォームを非表示にし、完了メッセージを表示します。');
-              sfaFormContainer.style.display = "none";
-              thanksMessage.style.display = "block";
-              // observer.disconnect(); // 監視停止が必要ならコメント解除
+          console.error('Error executing openForm:', error);
+          // エラー時にフォームエリアにメッセージ表示など
+          const formElement = document.getElementById('sfaForm_1');
+          if (formElement) {
+            formElement.innerHTML = '<p style="color: red;">フォームの表示に失敗しました。</p>';
           }
         }
-      });
-      // ★ 監視対象は body のまま (元のコードに合わせる) ★
-      observer.observe(document.body, { childList: true, subtree: true });
-      console.log('MutationObserver started observing document.body for completion message.');
+      } else {
+        console.error('openForm function not found!');
+        const formElement = document.getElementById('sfaForm_1');
+        if (formElement) {
+            formElement.innerHTML = '<p style="color: red;">フォームの読み込みに失敗しました(openFormなし)。</p>';
+          }
+      }
     });
+
+    // 完了メッセージ表示のロジックは、必要であれば調整
+    // (ただし、まずはフォームが表示されることが先決)
+    // document.addEventListener("DOMContentLoaded", function () { ... });
   </script>
 
 </body>
