@@ -4,44 +4,102 @@
   <meta charset="UTF-8">
   <title>資料請求フォーム</title>
   <style>
-    /* 必要であれば #sfaForm_1 に対するスタイルを調整 */
-    #sfaForm_1 {
-      padding: 20px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      margin-bottom: 20px;
-      min-height: 100px; /* フォームが表示されるまでの最低限の高さ */
+    /* ページ全体の基本設定 */
+    body {
+      background-color: #F3E5F5; /* 薄紫色の背景 (例: 明るめの紫) */
+      /* 他の薄紫色の候補:
+         #E6E6FA; (Lavender)
+         #EDE7F6; (もう少し淡い紫)
+         #D8BFD8; (Thistle)
+      */
+      margin: 0; /* bodyのデフォルトマージンを削除 */
+      padding: 20px; /* bodyに少しパディングを持たせる */
+      font-family: sans-serif; /* 読みやすいフォントを指定 */
     }
-    #thanksMessage { /* これは完了メッセージ用なので残す */
-      display: none;
+
+    /* フォーム全体を囲むラッパー */
+    .form-container {
+      max-width: 600px; /* フォームの最大幅 */
+      margin: 20px auto; /* 上下に20px、左右は自動で中央寄せ */
+      padding: 30px;     /* 内側の余白 */
+      background-color: #fff; /* フォームエリアの背景は白 */
+      border: 1px solid #ccc;
+      border-radius: 8px; /* 角を少し丸める */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 少し影をつける */
+    }
+
+    /* ロゴのスタイル */
+    .logo-area {
+      text-align: center; /* ロゴを中央に配置 */
+      margin-bottom: 25px; /* ロゴとタイトルの間の余白 */
+    }
+    .logo-area img {
+      max-width: 150px; /* ロゴの最大幅（実際のロゴに合わせて調整） */
+      height: auto;     /* 高さは自動調整 */
+    }
+
+    /* タイトルと説明文 */
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    p.description { /* 説明文用のクラスを追加 */
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    /* フォーム本体（外部JSで読み込まれる部分） */
+    #sfaForm_1 {
+      min-height: 100px; /* フォームが表示されるまでの最低限の高さ */
+      /* 外部JSでスタイルが上書きされる可能性あり */
+    }
+
+    /* 送信完了メッセージ */
+    #thanksMessage {
+      display: none; /* 初期状態では非表示 */
       padding: 20px;
-      /* ... 他のスタイル ... */
+      margin-top: 20px;
+      text-align: center;
+      color: #28a745; /* 緑色系の文字 */
+      background-color: #e9f7ef; /* 薄い緑色の背景 */
+      border: 1px solid #a6d7b8;
+      border-radius: 4px;
     }
   </style>
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
-  </head>
+</head>
 <body>
-  <h1>資料請求フォーム</h1>
-  <p>以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
-  <form id="sfaForm_1">
-     <p>フォームを読み込んでいます...</p>
-  </form>
+  <div class="form-container">
 
-  <div id="thanksMessage">ご登録ありがとうございました。</div>
+    <div class="logo-area">
+      <img src="image_ce68f9.png" alt="Asnalo ロゴ">
+      </div>
 
-  <script>
-    // deferを使っているので、DOMContentLoadedかwindow.onloadを使うのがより確実
+    <h1>資料請求フォーム</h1>
+    <p class="description">以下のフォームにご入力のうえ、送信をお願いいたします。</p>
+
+    <form id="sfaForm_1">
+      <p>フォームを読み込んでいます...</p>
+    </form>
+
+    <div id="thanksMessage">ご登録ありがとうございました。</div>
+
+  </div><script>
+    // ページ読み込み完了後にフォーム描画関数を実行
     window.addEventListener('load', function() {
-      // 念のため openForm が存在するか確認
+      // openForm 関数が存在するか確認
       if (typeof openForm === 'function') {
         try {
           console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+          // openForm 関数を実行してフォームを描画
           openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
           console.log('openForm executed.');
         } catch (error) {
           console.error('Error executing openForm:', error);
-          // エラー時にフォームエリアにメッセージ表示など
+          // エラー発生時のメッセージ表示
           const formElement = document.getElementById('sfaForm_1');
           if (formElement) {
             formElement.innerHTML = '<p style="color: red;">フォームの表示に失敗しました。</p>';
@@ -49,16 +107,21 @@
         }
       } else {
         console.error('openForm function not found!');
+        // openForm 関数が見つからない場合のエラーメッセージ
         const formElement = document.getElementById('sfaForm_1');
         if (formElement) {
-            formElement.innerHTML = '<p style="color: red;">フォームの読み込みに失敗しました(openFormなし)。</p>';
+            formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
           }
       }
     });
 
-    // 完了メッセージ表示のロジックは、必要であれば調整
-    // (ただし、まずはフォームが表示されることが先決)
-    // document.addEventListener("DOMContentLoaded", function () { ... });
+    // 送信完了時のメッセージ表示ロジック (例)
+    // 実際の完了処理は openForm が内部で行っている可能性が高いです。
+    // もし特定のイベントが発生する場合、それに合わせて調整が必要です。
+    // 例: document.getElementById('sfaForm_1').addEventListener('submitSuccess', function() {
+    //   document.getElementById('sfaForm_1').style.display = 'none';
+    //   document.getElementById('thanksMessage').style.display = 'block';
+    // });
   </script>
 
 </body>
