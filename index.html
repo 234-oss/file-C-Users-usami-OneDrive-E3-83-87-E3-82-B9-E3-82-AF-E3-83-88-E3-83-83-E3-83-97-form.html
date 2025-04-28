@@ -4,17 +4,16 @@
   <meta charset="UTF-8">
   <title>資料請求フォーム</title>
   <style>
-    /* ...(略)... CSSは変更なし */
+    /* ページ全体の基本設定 */
     body { background-color: #F3E5F5; margin: 0; padding: 20px; font-family: sans-serif; }
     .form-container { max-width: 600px; margin: 20px auto; padding: 30px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
     .logo-area { text-align: center; margin-bottom: 25px; }
     .logo-area img { max-width: 150px; height: auto; }
     #sfaForm_1 { min-height: 100px; }
-    .privacy-consent-area { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; margin-bottom: 15px; }
-    .privacy-consent-area input[type="checkbox"] { margin-right: 10px; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
-    .privacy-consent-area label { font-size: 0.95em; line-height: 1.5; cursor: pointer; }
-    .privacy-consent-area label a { color: #007bff; text-decoration: none; }
-    .privacy-consent-area label a:hover { text-decoration: underline; }
+    /* みなし同意文言のリンクスタイル */
+    #sfaForm_1 p a { color: #007bff; text-decoration: none; }
+    #sfaForm_1 p a:hover { text-decoration: underline; }
+    /* 送信完了メッセージ */
     #thanksMessage { display: none; padding: 20px; margin-top: 20px; text-align: center; color: #28a745; background-color: #e9f7ef; border: 1px solid #a6d7b8; border-radius: 4px; }
   </style>
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
@@ -24,112 +23,36 @@
     <div class="logo-area">
       <img src="https://asnalo.com/wp-content/uploads/elementor/thumbs/Asnalo_logo-oapowt4ma0niqm5nd8i0zm33wgv6zlnj9rf7nrz94w.png" alt="Asnalo ロゴ">
     </div>
-
     <form id="sfaForm_1">
       <p>フォームを読み込んでいます...</p>
-    </form>
-
-    <div id="thanksMessage">ご登録ありがとうございました。</div>
+      <p style="text-align: center; margin-top: 15px; margin-bottom:15px; font-size: 0.9em; color: #333;">
+        フォームを送信することにより、<a href="https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>に同意したものとみなされます。
+      </p>
+      </form> <div id="thanksMessage">ご登録ありがとうございました。</div>
   </div>
-
 <script>
+  // JavaScriptは元のシンプルな形に戻す
   window.addEventListener('load', function() {
-    // formElement はここでは使わないが、他の処理で必要になる可能性も考慮し残しておく
-    const formElement = document.getElementById('sfaForm_1');
-
-    function addConsentCheckbox() {
-      if (document.getElementById('privacy-consent')) {
-        return;
-      }
-
-      // ▼▼▼ 検索範囲を document 全体に変更 ▼▼▼
-      const submitButton = document.querySelector('#SfaSubmitButton');
-      // ▲▲▲ 検索範囲を document 全体に変更 ▲▲▲
-
-      if (!submitButton) {
-        console.log('Submit button (#SfaSubmitButton) NOT found in document at this moment.'); // メッセージ少し変更
-        return;
-      }
-
-      console.log('Submit button (#SfaSubmitButton) found in document. Adding privacy consent checkbox dynamically...'); // メッセージ少し変更
-      const consentArea = document.createElement('div');
-      consentArea.className = 'privacy-consent-area';
-      const checkboxInput = document.createElement('input');
-      checkboxInput.type = 'checkbox';
-      checkboxInput.id = 'privacy-consent';
-      checkboxInput.name = 'privacy-consent';
-      checkboxInput.value = 'accepted';
-      checkboxInput.required = true;
-      const label = document.createElement('label');
-      label.htmlFor = 'privacy-consent';
-      const link = document.createElement('a');
-      link.href = 'https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0';
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.textContent = 'プライバシーポリシー';
-      label.appendChild(link);
-      label.appendChild(document.createTextNode('を確認し、内容に同意します。'));
-      consentArea.appendChild(checkboxInput);
-      consentArea.appendChild(label);
-      try{
-          // ボタンの親要素の前に挿入 (ボタンがフォームの外にある可能性も考慮)
-          submitButton.parentNode.insertBefore(consentArea, submitButton);
-          console.log('Checkbox inserted successfully.');
-      } catch (e) {
-          console.error("Failed to insert checkbox:", e);
-          // 最終手段としてフォーム要素の最後に追加 (これは意図通りにならない可能性あり)
-          if(formElement){
-              formElement.appendChild(consentArea);
-              console.log('Checkbox appended to the end of the form as a fallback.');
-          }
-      }
-    }
-
-    // openForm 呼び出しと Observer の部分は変更なし (タイムアウト15秒)
     if (typeof openForm === 'function') {
       try {
         console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-        const observer = new MutationObserver(function(mutationsList, observer) {
-          addConsentCheckbox();
-        });
-        // 監視対象は formElement のままで良い（変更が form 内で起こると仮定）
-        // もし form の外で変更が起こるなら document.body を監視する必要があるが、まずはこれで試す
-        if (formElement){
-            observer.observe(formElement, { childList: true, subtree: true });
-            console.log('MutationObserver started to watch form changes.');
-        } else {
-             console.error("Form element #sfaForm_1 not found for observer.");
-             return; // フォーム要素がなければ監視できない
-        }
-
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-        console.log('openForm function called.');
-
-        let observerTimeout = setTimeout(() => {
-          if (observer) {
-            observer.disconnect();
-            console.log('MutationObserver stopped by timeout (15 seconds).');
-            if (!document.getElementById('privacy-consent')) {
-                console.log('Attempting to add checkbox one last time after observer timeout...');
-                addConsentCheckbox();
-            }
-          }
-        }, 15000);
-
+        console.log('openForm executed.');
       } catch (error) {
-        console.error('Error executing openForm or setting up observer:', error);
+        console.error('Error executing openForm:', error);
+        const formElement = document.getElementById('sfaForm_1');
         if (formElement) {
-          formElement.innerHTML = '<p style="color: red;">フォームの表示またはチェックボックスの追加処理でエラーが発生しました。</p>';
+          formElement.innerHTML = '<p style="color: red;">フォームの表示でエラーが発生しました。</p>';
         }
       }
     } else {
       console.error('openForm function not found!');
+      const formElement = document.getElementById('sfaForm_1');
       if (formElement) {
         formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
       }
     }
   });
 </script>
-
 </body>
 </html>
