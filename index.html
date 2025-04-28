@@ -5,130 +5,138 @@
   <title>資料請求フォーム</title>
   <style>
     /* ページ全体の基本設定 */
-    body {
-      background-color: #F3E5F5; /* 薄紫色の背景 */
-      margin: 0;
-      padding: 20px;
-      font-family: sans-serif;
-    }
-
-    /* フォーム全体を囲むラッパー */
-    .form-container {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 30px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    /* ロゴのスタイル */
-    .logo-area {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    .logo-area img {
-      max-width: 150px;
-      height: auto;
-    }
-
-    /* フォーム本体 */
-    #sfaForm_1 {
-      min-height: 100px;
-    }
-
-    /* プライバシーポリシー同意エリアのスタイル */
-    .privacy-consent-area {
-      margin-top: 20px; /* フォーム要素との間に少し余白 */
-      margin-bottom: 25px; /* 送信ボタンとの間に少し余白 */
-      padding: 15px;
-      background-color: #f9f9f9; /* エリアの背景色 */
-      border: 1px solid #eee;
-      border-radius: 4px;
-      display: flex; /* チェックボックスとラベルを横並びに */
-      align-items: center; /* 縦方向中央揃え */
-    }
-    .privacy-consent-area input[type="checkbox"] {
-      margin-right: 10px; /* チェックボックスとテキストの間隔 */
-      /* 必要であればサイズ調整 */
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0; /* チェックボックスが縮まないように */
-      cursor: pointer;
-    }
-    .privacy-consent-area label {
-       font-size: 0.95em;
-       line-height: 1.5;
-       cursor: pointer; /* ラベルクリックでチェック可能に */
-    }
-    .privacy-consent-area label a {
-      color: #007bff; /* プライバシーポリシーへのリンク色 */
-      text-decoration: none;
-    }
-    .privacy-consent-area label a:hover {
-      text-decoration: underline;
-    }
-
-    /* 送信完了メッセージ */
-    #thanksMessage {
-      display: none;
-      padding: 20px;
-      margin-top: 20px;
-      text-align: center;
-      color: #28a745;
-      background-color: #e9f7ef;
-      border: 1px solid #a6d7b8;
-      border-radius: 4px;
-    }
+    body { background-color: #F3E5F5; margin: 0; padding: 20px; font-family: sans-serif; }
+    .form-container { max-width: 600px; margin: 20px auto; padding: 30px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .logo-area { text-align: center; margin-bottom: 25px; }
+    .logo-area img { max-width: 150px; height: auto; }
+    #sfaForm_1 { min-height: 100px; }
+    /* プライバシーポリシー同意エリアのスタイル（動的生成される要素に適用される）*/
+    .privacy-consent-area { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; margin-bottom: 15px; /* 送信ボタンとの間隔調整 */ }
+    .privacy-consent-area input[type="checkbox"] { margin-right: 10px; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+    .privacy-consent-area label { font-size: 0.95em; line-height: 1.5; cursor: pointer; }
+    .privacy-consent-area label a { color: #007bff; text-decoration: none; }
+    .privacy-consent-area label a:hover { text-decoration: underline; }
+    #thanksMessage { display: none; padding: 20px; margin-top: 20px; text-align: center; color: #28a745; background-color: #e9f7ef; border: 1px solid #a6d7b8; border-radius: 4px; }
   </style>
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
 </head>
 <body>
-
   <div class="form-container">
-
     <div class="logo-area">
       <img src="https://asnalo.com/wp-content/uploads/elementor/thumbs/Asnalo_logo-oapowt4ma0niqm5nd8i0zm33wgv6zlnj9rf7nrz94w.png" alt="Asnalo ロゴ">
     </div>
 
     <form id="sfaForm_1">
       <p>フォームを読み込んでいます...</p>
-      <div class="privacy-consent-area">
-        <input type="checkbox" id="privacy-consent" name="privacy-consent" value="accepted" required>
-        <label for="privacy-consent">
-          <a href="https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>を確認し、内容に同意します。
-        </label>
-      </div>
       </form>
 
     <div id="thanksMessage">ご登録ありがとうございました。</div>
-
   </div>
 
 <script>
+  // ▼▼▼ ここからが新しいJavaScriptコードです ▼▼▼
   window.addEventListener('load', function() {
-    // openForm 関数の呼び出し部分は変更ありません
+    const formElement = document.getElementById('sfaForm_1'); // フォーム要素を取得
+
+    // --- チェックボックスを動的に追加する関数 ---
+    function addConsentCheckbox() {
+      // すでに追加されていないか確認
+      if (document.getElementById('privacy-consent')) {
+        return; // すでにあれば何もしない
+      }
+
+      // 送信ボタンを探す (セレクタは実際のHTMLに合わせて調整が必要な場合あり)
+      const submitButton = formElement.querySelector('input[type="submit"], button[type="submit"], input[type="button"][value="送信"], button:contains("送信")');
+
+      if (!submitButton) {
+        return; // 送信ボタンが見つからなければ挿入できない
+      }
+
+      console.log('Submit button found. Adding privacy consent checkbox dynamically...');
+
+      // チェックボックスとラベルを含むdiv要素を作成
+      const consentArea = document.createElement('div');
+      consentArea.className = 'privacy-consent-area'; // CSSクラスを適用
+
+      const checkboxInput = document.createElement('input');
+      checkboxInput.type = 'checkbox';
+      checkboxInput.id = 'privacy-consent';
+      checkboxInput.name = 'privacy-consent';
+      checkboxInput.value = 'accepted';
+      checkboxInput.required = true; // 必須項目にする
+
+      const label = document.createElement('label');
+      label.htmlFor = 'privacy-consent';
+
+      const link = document.createElement('a');
+      link.href = 'https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0'; // 指定されたURL
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = 'プライバシーポリシー';
+
+      label.appendChild(link);
+      label.appendChild(document.createTextNode('を確認し、内容に同意します。')); // テキストノードを追加
+
+      consentArea.appendChild(checkboxInput);
+      consentArea.appendChild(label);
+
+      // 送信ボタンの *直前* に作成した要素を挿入
+      try{
+          submitButton.parentNode.insertBefore(consentArea, submitButton);
+          console.log('Checkbox inserted successfully.');
+      } catch (e) {
+          console.error("Failed to insert checkbox:", e);
+          // もし送信ボタンの親要素への挿入に失敗した場合、フォーム要素の末尾に追加するフォールバック
+          formElement.appendChild(consentArea);
+          console.log('Checkbox appended to the end of the form as a fallback.');
+      }
+    }
+
+    // --- openForm 呼び出しと MutationObserver の設定 ---
     if (typeof openForm === 'function') {
       try {
         console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+
+        // MutationObserver の設定: フォームの中身の変更を監視
+        const observer = new MutationObserver(function(mutationsList, observer) {
+          addConsentCheckbox(); // フォーム内容変更時にチェックボックス追加を試みる
+        });
+
+        // 監視を開始
+        observer.observe(formElement, { childList: true, subtree: true });
+        console.log('MutationObserver started to watch form changes.');
+
+        // openForm を呼び出す
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-        console.log('openForm executed.');
+        console.log('openForm function called.');
+
+        // 一定時間後に監視を停止
+        let observerTimeout = setTimeout(() => {
+          if (observer) {
+            observer.disconnect();
+            console.log('MutationObserver stopped by timeout (7 seconds).');
+            // タイムアウト後にもう一度試す (保険)
+            if (!document.getElementById('privacy-consent')) {
+                console.log('Attempting to add checkbox one last time after observer timeout...');
+                addConsentCheckbox();
+            }
+          }
+        }, 7000);
+
       } catch (error) {
-        console.error('Error executing openForm:', error);
-        const formElement = document.getElementById('sfaForm_1');
+        console.error('Error executing openForm or setting up observer:', error);
         if (formElement) {
-          formElement.innerHTML = '<p style="color: red;">フォームの表示に失敗しました。</p>';
+          formElement.innerHTML = '<p style="color: red;">フォームの表示またはチェックボックスの追加処理でエラーが発生しました。</p>';
         }
       }
     } else {
       console.error('openForm function not found!');
-      const formElement = document.getElementById('sfaForm_1');
       if (formElement) {
         formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
       }
     }
   });
+  // ▲▲▲ ここまでが新しいJavaScriptコードです ▲▲▲
 
   // 送信完了時のメッセージ表示ロジック (例) - 変更なし
 </script>
