@@ -11,7 +11,7 @@
          #E6E6FA; (Lavender)
          #EDE7F6; (もう少し淡い紫)
          #D8BFD8; (Thistle)
-      */
+       */
       margin: 0; /* bodyのデフォルトマージンを削除 */
       padding: 20px; /* bodyに少しパディングを持たせる */
       font-family: sans-serif; /* 読みやすいフォントを指定 */
@@ -21,7 +21,7 @@
     .form-container {
       max-width: 600px; /* フォームの最大幅 */
       margin: 20px auto; /* 上下に20px、左右は自動で中央寄せ */
-      padding: 30px;     /* 内側の余白 */
+      padding: 30px;    /* 内側の余白 */
       background-color: #fff; /* フォームエリアの背景は白 */
       border: 1px solid #ccc;
       border-radius: 8px; /* 角を少し丸める */
@@ -31,24 +31,14 @@
     /* ロゴのスタイル */
     .logo-area {
       text-align: center; /* ロゴを中央に配置 */
-      margin-bottom: 25px; /* ロゴとタイトルの間の余白 */
+      margin-bottom: 25px; /* ロゴとフォームの間の余白 */ /* 元々タイトルとの間の余白だったものを調整 */
     }
     .logo-area img {
       max-width: 150px; /* ロゴの最大幅（実際のロゴに合わせて調整） */
-      height: auto;     /* 高さは自動調整 */
+      height: auto;   /* 高さは自動調整 */
     }
 
-    /* タイトルと説明文 */
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    p.description { /* 説明文用のクラスを追加 */
-      text-align: center;
-      color: #555;
-      margin-bottom: 30px;
-    }
+    /* h1 と p.description のスタイルは削除しました */
 
     /* フォーム本体（外部JSで読み込まれる部分） */
     #sfaForm_1 {
@@ -77,9 +67,6 @@
     <div class="logo-area">
       <img src="https://asnalo.com/wp-content/uploads/elementor/thumbs/Asnalo_logo-oapowt4ma0niqm5nd8i0zm33wgv6zlnj9rf7nrz94w.png" alt="Asnalo ロゴ">
       </div>
-
-    <h1>資料請求フォーム</h1>
-    <p class="description">以下のフォームにご入力のうえ、送信をお願いいたします。</p>
 
     <form id="sfaForm_1">
       <p>フォームを読み込んでいます...</p>
@@ -110,8 +97,8 @@
         // openForm 関数が見つからない場合のエラーメッセージ
         const formElement = document.getElementById('sfaForm_1');
         if (formElement) {
-            formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
-          }
+          formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
+        }
       }
     });
 
