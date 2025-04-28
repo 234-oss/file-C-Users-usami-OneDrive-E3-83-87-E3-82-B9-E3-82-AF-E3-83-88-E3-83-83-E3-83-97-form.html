@@ -5,40 +5,81 @@
   <title>資料請求フォーム</title>
   <style>
     /* ページ全体の基本設定 */
-    body { background-color: #F3E5F5; margin: 0; padding: 20px; font-family: sans-serif; }
-    .form-container { max-width: 600px; margin: 20px auto; padding: 30px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .logo-area { text-align: center; margin-bottom: 25px; }
-    .logo-area img { max-width: 150px; height: auto; }
-    #sfaForm_1 { min-height: 100px; }
-    /* みなし同意文言のリンクスタイル */
-    #sfaForm_1 p a { color: #007bff; text-decoration: none; }
-    #sfaForm_1 p a:hover { text-decoration: underline; }
+    body {
+      background-color: #F3E5F5; /* 薄紫色の背景 */
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+    }
+
+    /* フォーム全体を囲むラッパー */
+    .form-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 30px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* ロゴのスタイル */
+    .logo-area {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .logo-area img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    /* フォーム本体 */
+    #sfaForm_1 {
+      min-height: 100px; /* フォームが表示されるまでの最低限の高さ */
+    }
+
     /* 送信完了メッセージ */
-    #thanksMessage { display: none; padding: 20px; margin-top: 20px; text-align: center; color: #28a745; background-color: #e9f7ef; border: 1px solid #a6d7b8; border-radius: 4px; }
+    #thanksMessage {
+      display: none;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+      color: #28a745;
+      background-color: #e9f7ef;
+      border: 1px solid #a6d7b8;
+      border-radius: 4px;
+    }
+    /* チェックボックス関連のカスタムCSSは削除しました */
   </style>
   <script defer src="https://geo-code-cloud.s3-ap-northeast-1.amazonaws.com/next-sfa/js/gc.nsfa.form.min.js"></script>
 </head>
 <body>
+
   <div class="form-container">
+
     <div class="logo-area">
       <img src="https://asnalo.com/wp-content/uploads/elementor/thumbs/Asnalo_logo-oapowt4ma0niqm5nd8i0zm33wgv6zlnj9rf7nrz94w.png" alt="Asnalo ロゴ">
     </div>
+
     <form id="sfaForm_1">
       <p>フォームを読み込んでいます...</p>
-      <p style="text-align: center; margin-top: 15px; margin-bottom:15px; font-size: 0.9em; color: #333;">
-        フォームを送信することにより、<a href="https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>に同意したものとみなされます。
-      </p>
-      </form> <div id="thanksMessage">ご登録ありがとうございました。</div>
+      </form>
+
+    <div id="thanksMessage">ご登録ありがとうございました。</div>
+
   </div>
+
 <script>
-  // JavaScriptは元のシンプルな形に戻す
+  // ページ読み込み完了後にSFAのフォーム描画関数を実行するシンプルなスクリプト
   window.addEventListener('load', function() {
     if (typeof openForm === 'function') {
       try {
+        // SFAフォームを呼び出す（引数は実際のSFA設定に合わせてください）
         console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
         console.log('openForm executed.');
       } catch (error) {
+        // エラーハンドリング
         console.error('Error executing openForm:', error);
         const formElement = document.getElementById('sfaForm_1');
         if (formElement) {
@@ -46,6 +87,7 @@
         }
       }
     } else {
+      // openForm関数が見つからない場合のエラー
       console.error('openForm function not found!');
       const formElement = document.getElementById('sfaForm_1');
       if (formElement) {
@@ -53,6 +95,8 @@
       }
     }
   });
+  // チェックボックスを動的に追加する複雑な処理は削除しました
 </script>
+
 </body>
 </html>
