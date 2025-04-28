@@ -41,14 +41,15 @@
         return;
       }
 
-      // ▼▼▼ ここのセレクタから :contains("送信") を削除しました ▼▼▼
-      const submitButton = formElement.querySelector('input[type="submit"], button[type="submit"], input[type="button"][value="送信"]');
-      // ▲▲▲ ここのセレクタから :contains("送信") を削除しました ▲▲▲
+      // ▼▼▼ 送信ボタンのセレクタを ID (#SfaSubmitButton) に変更しました ▼▼▼
+      const submitButton = formElement.querySelector('#SfaSubmitButton');
+      // ▲▲▲ 送信ボタンのセレクタを ID (#SfaSubmitButton) に変更しました ▲▲▲
 
       if (!submitButton) {
+        // console.warn('#SfaSubmitButton not found yet.'); // デバッグ用
         return;
       }
-      console.log('Submit button found. Adding privacy consent checkbox dynamically...');
+      console.log('Submit button (#SfaSubmitButton) found. Adding privacy consent checkbox dynamically...');
       const consentArea = document.createElement('div');
       consentArea.className = 'privacy-consent-area';
       const checkboxInput = document.createElement('input');
