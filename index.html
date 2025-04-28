@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <title>資料請求フォーム</title>
   <style>
-    /* ページ全体の基本設定 */
+    /* ...(略)... CSSは変更なし */
     body { background-color: #F3E5F5; margin: 0; padding: 20px; font-family: sans-serif; }
     .form-container { max-width: 600px; margin: 20px auto; padding: 30px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
     .logo-area { text-align: center; margin-bottom: 25px; }
     .logo-area img { max-width: 150px; height: auto; }
     #sfaForm_1 { min-height: 100px; }
-    /* プライバシーポリシー同意エリアのスタイル（動的生成される要素に適用される）*/
-    .privacy-consent-area { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; margin-bottom: 15px; /* 送信ボタンとの間隔調整 */ }
+    .privacy-consent-area { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; margin-bottom: 15px; }
     .privacy-consent-area input[type="checkbox"] { margin-right: 10px; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
     .privacy-consent-area label { font-size: 0.95em; line-height: 1.5; cursor: pointer; }
     .privacy-consent-area label a { color: #007bff; text-decoration: none; }
@@ -28,30 +27,31 @@
 
     <form id="sfaForm_1">
       <p>フォームを読み込んでいます...</p>
-      </form>
+    </form>
 
     <div id="thanksMessage">ご登録ありがとうございました。</div>
   </div>
 
 <script>
-  // ▼▼▼ この script タグの中身が重要です ▼▼▼
   window.addEventListener('load', function() {
+    // formElement はここでは使わないが、他の処理で必要になる可能性も考慮し残しておく
     const formElement = document.getElementById('sfaForm_1');
 
     function addConsentCheckbox() {
       if (document.getElementById('privacy-consent')) {
         return;
       }
-      const submitButton = formElement.querySelector('#SfaSubmitButton');
 
-      // ▼▼▼ 送信ボタンが見つからない場合のログ ▼▼▼
+      // ▼▼▼ 検索範囲を document 全体に変更 ▼▼▼
+      const submitButton = document.querySelector('#SfaSubmitButton');
+      // ▲▲▲ 検索範囲を document 全体に変更 ▲▲▲
+
       if (!submitButton) {
-        console.log('Submit button (#SfaSubmitButton) NOT found at this moment.'); // このログが出るか確認
+        console.log('Submit button (#SfaSubmitButton) NOT found in document at this moment.'); // メッセージ少し変更
         return;
       }
-      // ▲▲▲ 送信ボタンが見つからない場合のログ ▲▲▲
 
-      console.log('Submit button (#SfaSubmitButton) found. Adding privacy consent checkbox dynamically...');
+      console.log('Submit button (#SfaSubmitButton) found in document. Adding privacy consent checkbox dynamically...'); // メッセージ少し変更
       const consentArea = document.createElement('div');
       consentArea.className = 'privacy-consent-area';
       const checkboxInput = document.createElement('input');
@@ -72,39 +72,49 @@
       consentArea.appendChild(checkboxInput);
       consentArea.appendChild(label);
       try{
+          // ボタンの親要素の前に挿入 (ボタンがフォームの外にある可能性も考慮)
           submitButton.parentNode.insertBefore(consentArea, submitButton);
-          console.log('Checkbox inserted successfully.'); // このログが出るか確認
+          console.log('Checkbox inserted successfully.');
       } catch (e) {
           console.error("Failed to insert checkbox:", e);
-          formElement.appendChild(consentArea);
-          console.log('Checkbox appended to the end of the form as a fallback.');
+          // 最終手段としてフォーム要素の最後に追加 (これは意図通りにならない可能性あり)
+          if(formElement){
+              formElement.appendChild(consentArea);
+              console.log('Checkbox appended to the end of the form as a fallback.');
+          }
       }
     }
 
+    // openForm 呼び出しと Observer の部分は変更なし (タイムアウト15秒)
     if (typeof openForm === 'function') {
       try {
         console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
         const observer = new MutationObserver(function(mutationsList, observer) {
-           // console.log('MutationObserver callback triggered.');
           addConsentCheckbox();
         });
-        observer.observe(formElement, { childList: true, subtree: true });
-        console.log('MutationObserver started to watch form changes.');
+        // 監視対象は formElement のままで良い（変更が form 内で起こると仮定）
+        // もし form の外で変更が起こるなら document.body を監視する必要があるが、まずはこれで試す
+        if (formElement){
+            observer.observe(formElement, { childList: true, subtree: true });
+            console.log('MutationObserver started to watch form changes.');
+        } else {
+             console.error("Form element #sfaForm_1 not found for observer.");
+             return; // フォーム要素がなければ監視できない
+        }
+
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
         console.log('openForm function called.');
 
-        // ▼▼▼ タイムアウト時間を 15秒 (15000ms) に設定 ▼▼▼
         let observerTimeout = setTimeout(() => {
           if (observer) {
             observer.disconnect();
-            console.log('MutationObserver stopped by timeout (15 seconds).'); // このログが出るか確認
+            console.log('MutationObserver stopped by timeout (15 seconds).');
             if (!document.getElementById('privacy-consent')) {
                 console.log('Attempting to add checkbox one last time after observer timeout...');
                 addConsentCheckbox();
             }
           }
-        }, 15000); // タイムアウト 15秒
-        // ▲▲▲ タイムアウト時間を 15秒 (15000ms) に設定 ▲▲▲
+        }, 15000);
 
       } catch (error) {
         console.error('Error executing openForm or setting up observer:', error);
@@ -119,7 +129,6 @@
       }
     }
   });
-  // ▲▲▲ この script タグの中身が重要です ▲▲▲
 </script>
 
 </body>
