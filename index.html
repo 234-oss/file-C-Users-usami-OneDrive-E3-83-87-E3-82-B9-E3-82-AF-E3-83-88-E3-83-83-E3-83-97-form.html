@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <title>資料請求フォーム</title>
   <style>
-    /* ページ全体の基本設定 */
+    /* ...(略)... CSSは変更なし */
     body { background-color: #F3E5F5; margin: 0; padding: 20px; font-family: sans-serif; }
     .form-container { max-width: 600px; margin: 20px auto; padding: 30px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
     .logo-area { text-align: center; margin-bottom: 25px; }
     .logo-area img { max-width: 150px; height: auto; }
     #sfaForm_1 { min-height: 100px; }
-    /* プライバシーポリシー同意エリアのスタイル（動的生成される要素に適用される）*/
-    .privacy-consent-area { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; margin-bottom: 15px; /* 送信ボタンとの間隔調整 */ }
+    .privacy-consent-area { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center; margin-bottom: 15px; }
     .privacy-consent-area input[type="checkbox"] { margin-right: 10px; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
     .privacy-consent-area label { font-size: 0.95em; line-height: 1.5; cursor: pointer; }
     .privacy-consent-area label a { color: #007bff; text-decoration: none; }
@@ -34,95 +33,71 @@
   </div>
 
 <script>
-  // ▼▼▼ ここからが新しいJavaScriptコードです ▼▼▼
   window.addEventListener('load', function() {
-    const formElement = document.getElementById('sfaForm_1'); // フォーム要素を取得
+    const formElement = document.getElementById('sfaForm_1');
 
-    // --- チェックボックスを動的に追加する関数 ---
     function addConsentCheckbox() {
-      // すでに追加されていないか確認
       if (document.getElementById('privacy-consent')) {
-        return; // すでにあれば何もしない
+        return;
       }
 
-      // 送信ボタンを探す (セレクタは実際のHTMLに合わせて調整が必要な場合あり)
-      const submitButton = formElement.querySelector('input[type="submit"], button[type="submit"], input[type="button"][value="送信"], button:contains("送信")');
+      // ▼▼▼ ここのセレクタから :contains("送信") を削除しました ▼▼▼
+      const submitButton = formElement.querySelector('input[type="submit"], button[type="submit"], input[type="button"][value="送信"]');
+      // ▲▲▲ ここのセレクタから :contains("送信") を削除しました ▲▲▲
 
       if (!submitButton) {
-        return; // 送信ボタンが見つからなければ挿入できない
+        return;
       }
-
       console.log('Submit button found. Adding privacy consent checkbox dynamically...');
-
-      // チェックボックスとラベルを含むdiv要素を作成
       const consentArea = document.createElement('div');
-      consentArea.className = 'privacy-consent-area'; // CSSクラスを適用
-
+      consentArea.className = 'privacy-consent-area';
       const checkboxInput = document.createElement('input');
       checkboxInput.type = 'checkbox';
       checkboxInput.id = 'privacy-consent';
       checkboxInput.name = 'privacy-consent';
       checkboxInput.value = 'accepted';
-      checkboxInput.required = true; // 必須項目にする
-
+      checkboxInput.required = true;
       const label = document.createElement('label');
       label.htmlFor = 'privacy-consent';
-
       const link = document.createElement('a');
-      link.href = 'https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0'; // 指定されたURL
+      link.href = 'https://shadowed-licorice-3d5.notion.site/1e1a77c7cee980da8091d8176a4570c0';
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
       link.textContent = 'プライバシーポリシー';
-
       label.appendChild(link);
-      label.appendChild(document.createTextNode('を確認し、内容に同意します。')); // テキストノードを追加
-
+      label.appendChild(document.createTextNode('を確認し、内容に同意します。'));
       consentArea.appendChild(checkboxInput);
       consentArea.appendChild(label);
-
-      // 送信ボタンの *直前* に作成した要素を挿入
       try{
           submitButton.parentNode.insertBefore(consentArea, submitButton);
           console.log('Checkbox inserted successfully.');
       } catch (e) {
           console.error("Failed to insert checkbox:", e);
-          // もし送信ボタンの親要素への挿入に失敗した場合、フォーム要素の末尾に追加するフォールバック
           formElement.appendChild(consentArea);
           console.log('Checkbox appended to the end of the form as a fallback.');
       }
     }
 
-    // --- openForm 呼び出しと MutationObserver の設定 ---
     if (typeof openForm === 'function') {
       try {
         console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-
-        // MutationObserver の設定: フォームの中身の変更を監視
         const observer = new MutationObserver(function(mutationsList, observer) {
-          addConsentCheckbox(); // フォーム内容変更時にチェックボックス追加を試みる
+          addConsentCheckbox();
         });
-
-        // 監視を開始
         observer.observe(formElement, { childList: true, subtree: true });
         console.log('MutationObserver started to watch form changes.');
-
-        // openForm を呼び出す
         openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
         console.log('openForm function called.');
-
-        // 一定時間後に監視を停止
         let observerTimeout = setTimeout(() => {
           if (observer) {
             observer.disconnect();
             console.log('MutationObserver stopped by timeout (7 seconds).');
-            // タイムアウト後にもう一度試す (保険)
             if (!document.getElementById('privacy-consent')) {
                 console.log('Attempting to add checkbox one last time after observer timeout...');
                 addConsentCheckbox();
             }
           }
         }, 7000);
-
       } catch (error) {
         console.error('Error executing openForm or setting up observer:', error);
         if (formElement) {
@@ -136,9 +111,6 @@
       }
     }
   });
-  // ▲▲▲ ここまでが新しいJavaScriptコードです ▲▲▲
-
-  // 送信完了時のメッセージ表示ロジック (例) - 変更なし
 </script>
 
 </body>
