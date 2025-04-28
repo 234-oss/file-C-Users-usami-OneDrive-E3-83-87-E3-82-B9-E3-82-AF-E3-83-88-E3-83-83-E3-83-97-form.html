@@ -6,54 +6,79 @@
   <style>
     /* ページ全体の基本設定 */
     body {
-      background-color: #F3E5F5; /* 薄紫色の背景 (例: 明るめの紫) */
-      /* 他の薄紫色の候補:
-         #E6E6FA; (Lavender)
-         #EDE7F6; (もう少し淡い紫)
-         #D8BFD8; (Thistle)
-       */
-      margin: 0; /* bodyのデフォルトマージンを削除 */
-      padding: 20px; /* bodyに少しパディングを持たせる */
-      font-family: sans-serif; /* 読みやすいフォントを指定 */
+      background-color: #F3E5F5; /* 薄紫色の背景 */
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
     }
 
     /* フォーム全体を囲むラッパー */
     .form-container {
-      max-width: 600px; /* フォームの最大幅 */
-      margin: 20px auto; /* 上下に20px、左右は自動で中央寄せ */
-      padding: 30px;    /* 内側の余白 */
-      background-color: #fff; /* フォームエリアの背景は白 */
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 30px;
+      background-color: #fff;
       border: 1px solid #ccc;
-      border-radius: 8px; /* 角を少し丸める */
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 少し影をつける */
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     /* ロゴのスタイル */
     .logo-area {
-      text-align: center; /* ロゴを中央に配置 */
-      margin-bottom: 25px; /* ロゴとフォームの間の余白 */ /* 元々タイトルとの間の余白だったものを調整 */
+      text-align: center;
+      margin-bottom: 25px;
     }
     .logo-area img {
-      max-width: 150px; /* ロゴの最大幅（実際のロゴに合わせて調整） */
-      height: auto;   /* 高さは自動調整 */
+      max-width: 150px;
+      height: auto;
     }
 
-    /* h1 と p.description のスタイルは削除しました */
-
-    /* フォーム本体（外部JSで読み込まれる部分） */
+    /* フォーム本体 */
     #sfaForm_1 {
-      min-height: 100px; /* フォームが表示されるまでの最低限の高さ */
-      /* 外部JSでスタイルが上書きされる可能性あり */
+      min-height: 100px;
     }
+
+    /* --- 追加：プライバシーポリシー同意エリアのスタイル --- */
+    .privacy-consent-area {
+      margin-top: 20px; /* フォーム要素との間に少し余白 */
+      margin-bottom: 25px; /* 送信ボタンとの間に少し余白 */
+      padding: 15px;
+      background-color: #f9f9f9; /* エリアの背景色 */
+      border: 1px solid #eee;
+      border-radius: 4px;
+      display: flex; /* チェックボックスとラベルを横並びに */
+      align-items: center; /* 縦方向中央揃え */
+    }
+    .privacy-consent-area input[type="checkbox"] {
+      margin-right: 10px; /* チェックボックスとテキストの間隔 */
+      /* 必要であればサイズ調整 */
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0; /* チェックボックスが縮まないように */
+      cursor: pointer;
+    }
+    .privacy-consent-area label {
+       font-size: 0.95em;
+       line-height: 1.5;
+       cursor: pointer; /* ラベルクリックでチェック可能に */
+    }
+    .privacy-consent-area label a {
+      color: #007bff; /* プライバシーポリシーへのリンク色 */
+      text-decoration: none;
+    }
+    .privacy-consent-area label a:hover {
+      text-decoration: underline;
+    }
+    /* --- スタイル追加ここまで --- */
 
     /* 送信完了メッセージ */
     #thanksMessage {
-      display: none; /* 初期状態では非表示 */
+      display: none;
       padding: 20px;
       margin-top: 20px;
       text-align: center;
-      color: #28a745; /* 緑色系の文字 */
-      background-color: #e9f7ef; /* 薄い緑色の背景 */
+      color: #28a745;
+      background-color: #e9f7ef;
       border: 1px solid #a6d7b8;
       border-radius: 4px;
     }
@@ -66,50 +91,48 @@
 
     <div class="logo-area">
       <img src="https://asnalo.com/wp-content/uploads/elementor/thumbs/Asnalo_logo-oapowt4ma0niqm5nd8i0zm33wgv6zlnj9rf7nrz94w.png" alt="Asnalo ロゴ">
-      </div>
+    </div>
 
     <form id="sfaForm_1">
       <p>フォームを読み込んでいます...</p>
-    </form>
+      <div class="privacy-consent-area">
+        <input type="checkbox" id="privacy-consent" name="privacy-consent" value="accepted" required>
+        <label for="privacy-consent">
+          <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>を確認し、内容に同意します。
+        </label>
+      </div>
+      </form>
 
     <div id="thanksMessage">ご登録ありがとうございました。</div>
 
-  </div><script>
-    // ページ読み込み完了後にフォーム描画関数を実行
-    window.addEventListener('load', function() {
-      // openForm 関数が存在するか確認
-      if (typeof openForm === 'function') {
-        try {
-          console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-          // openForm 関数を実行してフォームを描画
-          openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
-          console.log('openForm executed.');
-        } catch (error) {
-          console.error('Error executing openForm:', error);
-          // エラー発生時のメッセージ表示
-          const formElement = document.getElementById('sfaForm_1');
-          if (formElement) {
-            formElement.innerHTML = '<p style="color: red;">フォームの表示に失敗しました。</p>';
-          }
-        }
-      } else {
-        console.error('openForm function not found!');
-        // openForm 関数が見つからない場合のエラーメッセージ
+  </div>
+
+<script>
+  window.addEventListener('load', function() {
+    // openForm 関数の呼び出し部分は変更ありません
+    if (typeof openForm === 'function') {
+      try {
+        console.log('Calling openForm with:', "B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+        openForm("B0jenQULYLxhTqvY5UIHASkPaQOdGbDs", "335", "1");
+        console.log('openForm executed.');
+      } catch (error) {
+        console.error('Error executing openForm:', error);
         const formElement = document.getElementById('sfaForm_1');
         if (formElement) {
-          formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
+          formElement.innerHTML = '<p style="color: red;">フォームの表示に失敗しました。</p>';
         }
       }
-    });
+    } else {
+      console.error('openForm function not found!');
+      const formElement = document.getElementById('sfaForm_1');
+      if (formElement) {
+        formElement.innerHTML = '<p style="color: red;">フォームの読み込みに必要な関数が見つかりません。</p>';
+      }
+    }
+  });
 
-    // 送信完了時のメッセージ表示ロジック (例)
-    // 実際の完了処理は openForm が内部で行っている可能性が高いです。
-    // もし特定のイベントが発生する場合、それに合わせて調整が必要です。
-    // 例: document.getElementById('sfaForm_1').addEventListener('submitSuccess', function() {
-    //   document.getElementById('sfaForm_1').style.display = 'none';
-    //   document.getElementById('thanksMessage').style.display = 'block';
-    // });
-  </script>
+  // 送信完了時のメッセージ表示ロジック (例) - 変更なし
+</script>
 
 </body>
 </html>
